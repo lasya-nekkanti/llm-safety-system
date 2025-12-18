@@ -128,7 +128,7 @@ filtering alone
 
 ---
 
-### Design Philosophy
+## Design Philosophy
 
 This system uses multiple safety detectors, each targeting a different failure 
 mode in LLM pipelines.
