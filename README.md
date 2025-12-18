@@ -75,6 +75,25 @@ reference facts.
 
 ---
 
+## How to Run
+
+1. Clone the repository and navigate to the project directory:
+   ```bash
+   git clone https://github.com/lasya-nekkanti/llm-safety-system.git
+   cd llm-safety-system
+
+2. Create and activate a virtual environment:
+   python3 -m venv venv
+   source venv/bin/activate
+
+3. Install dependencies:
+   pip install -r requirements.txt
+
+4.Run the demo pipeline:
+  python app.py
+
+---
+
 ## Evaluation
 
 The system is evaluated qualitatively through controlled example scenarios,
