@@ -10,7 +10,8 @@ strong.
 This project implements a **hybrid AI safety system** that:
 1. Detects **poisoned or malicious context before generation**
 2. Verifies **hallucinations after generation**
-3. Demonstrates how early safety checks reduce downstream hallucinations
+3. Demonstrates how layered safety checks surface different failure modes in 
+LLM pipelines
 
 The focus is on **system-level AI safety**, not just model accuracy.
 
@@ -23,8 +24,9 @@ override system behavior and cause hallucinations. Post-generation
 filtering alone is insufficient.
 
 **Goal:**  
-Build a modular safety layer that detects poisoning *before* inference and 
-measures hallucination reduction *after* inference.
+Build a modular safety layer that detects poisoning before inference and 
+verifies hallucinations after inference.
+
 
 
 ---
@@ -32,34 +34,12 @@ measures hallucination reduction *after* inference.
 ## Threat Model
 ### Attacks Covered
 - Prompt Injection
-- Instruction Override
 - Context / Document Poisoning
-- Retrieval Poisoning (RAG-specific)
 
 ### Out of Scope
 - Model weight poisoning
 - Supply-chain attacks
 - Adversarial token perturbations
-
----
-
-## System Architecture
-User Query
-↓
-Retriever (Embedding-based)
-↓
-Retrieved Context
-↓
-Poisoning Detection Layer
-├── Prompt Injection Detector
-├── Intent Mismatch Detector
-└── Token Anomaly Detector
-↓ (if safe)
-LLM Generation (simulated)
-↓
-Hallucination Verification (NLI-based)
-↓
-Final Answer + Safety Signal
 
 ---
 
@@ -73,10 +53,8 @@ A **multi-layer defense** is used:
 - **Intent Mismatch Detector**
   - Uses sentence embeddings to detect semantic divergence between query 
 and context
-- **Token Anomaly Detector**
-  - Detects abnormal imperative or system-level language
 
-If any detector triggers, generation is blocked.
+Safety signals are reported before generation to highlight potential risks.
 
 ---
 
@@ -84,39 +62,35 @@ If any detector triggers, generation is blocked.
 - Documents are embedded using Sentence-BERT
 - Query–document similarity is computed via cosine similarity
 - The most relevant document is retrieved
-- The retrieval layer is modular and can be replaced with FAISS in 
-production
+- The retrieval layer is modular and could be replaced with FAISS in a 
+production setting.
 
 ---
 
 ### 3. Hallucination Detection (Post-generation)
-- Uses a Natural Language Inference (NLI) model
-- Checks whether the generated answer is **entailed** by the retrieved 
-context
+- Uses sentence embedding similarity to compare generated answers with trusted 
+reference facts.
+- Semantically distant outputs are flagged as potential hallucinations.
 - Non-entailed responses are flagged as hallucinations
 
 ---
 
 ## Evaluation
-The system is evaluated qualitatively by comparing:
 
-- **Without poisoning detection:** hallucinations observed
-- **With poisoning detection:** hallucinations reduced by blocking 
-malicious context
-
-This demonstrates that many hallucinations originate from poisoned inputs 
-rather than model limitations.
+The system is evaluated qualitatively through controlled example scenarios,
+demonstrating how different safety detectors activate under different threat 
+conditions.
 
 ---
 
 
 ## Technologies Used
 - Python
-- HuggingFace Transformers
-- Sentence-BERT
-- Natural Language Inference (NLI)
+- HuggingFace Sentence Transformers
+- Transformer-based Embedding Models (MiniLM)
+- Semantic Similarity (Cosine Distance)
 - Retrieval-Augmented Generation (RAG)
-- AI Safety Techniques
+- Modular AI Safety Techniques
 
 ---
 
@@ -155,4 +129,20 @@ specialized rather than redundant.
 - Add CLI or API interface for interactive use
 - Expand poisoning detection beyond rule-based patterns
 ---
+
+## Summary
+
+This project demonstrates a practical, system-level approach to AI safety for
+Retrieval-Augmented Generation (RAG) based LLM applications.
+
+Rather than treating hallucinations as a purely model-level issue, the system
+shows how unsafe or poisoned context can propagate through the pipeline and
+lead to incorrect outputs. By introducing layered safety checks before and
+after generation—such as poisoning detection, intent–context alignment 
+analysis,
+and hallucination verification—the project highlights how many LLM failures
+can be mitigated through better system design.
+
+The implementation prioritizes modularity, interpretability, and realistic
+failure modes, reflecting how modern LLM safety systems are built in practice.
 
