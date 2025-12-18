@@ -128,13 +128,32 @@ filtering alone
 
 ---
 
-## Future Work
-- Quantitative evaluation on larger datasets
-- Support for multi-document retrieval
-- Confidence-based abstention
-- Real-time monitoring and logging
-- Integration with production LLM APIs
+### Design Philosophy
 
+This system uses multiple safety detectors, each targeting a different failure 
+mode in LLM pipelines.
+Not all detectors are expected to activate for every input.
+
+For example:
+- **Poisoning detection** flags malicious or instruction-overriding retrieved 
+context.
+- **Intent mismatch detection** identifies semantic divergence between user 
+intent and retrieved data.
+- **Hallucination verification** checks whether model outputs are grounded in 
+trusted reference facts.
+
+Depending on the threat scenario, some detectors may correctly remain inactive 
+while others trigger.
+This layered design mirrors real-world LLM safety systems, where defenses are 
+specialized rather than redundant.
+
+---
+
+## Future Work
+- Replace simulated outputs with real LLM inference
+- Add stronger fact-checking models (NLI, external knowledge bases)
+- Add CLI or API interface for interactive use
+- Expand poisoning detection beyond rule-based patterns
 ---
 
 ## Author
