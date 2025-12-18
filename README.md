@@ -1,0 +1,167 @@
+# Hybrid AI Safety System for LLM Poisoning & Hallucination Detection
+
+## Overview
+Large Language Models (LLMs) integrated with external knowledge sources 
+(Retrieval-Augmented Generation, RAG) are vulnerable to **prompt 
+injection** and **context poisoning** attacks. These attacks often lead to 
+**hallucinated or misleading outputs**, even when the base model is 
+strong.
+
+This project implements a **hybrid AI safety system** that:
+1. Detects **poisoned or malicious context before generation**
+2. Verifies **hallucinations after generation**
+3. Demonstrates how early safety checks reduce downstream hallucinations
+
+The focus is on **system-level AI safety**, not just model accuracy.
+
+---
+
+## Problem Statement
+LLM applications frequently trust retrieved documents without verifying 
+intent or safety. Malicious instructions hidden in retrieved text can 
+override system behavior and cause hallucinations. Post-generation 
+filtering alone is insufficient.
+
+**Goal:**  
+Build a modular safety layer that detects poisoning *before* inference and 
+measures hallucination reduction *after* inference.
+
+---
+
+## Threat Model
+### Attacks Covered
+- Prompt Injection
+- Instruction Override
+- Context / Document Poisoning
+- Retrieval Poisoning (RAG-specific)
+
+### Out of Scope
+- Model weight poisoning
+- Supply-chain attacks
+- Adversarial token perturbations
+
+---
+
+## System Architecture
+User Query
+↓
+Retriever (Embedding-based)
+↓
+Retrieved Context
+↓
+Poisoning Detection Layer
+├── Prompt Injection Detector
+├── Intent Mismatch Detector
+└── Token Anomaly Detector
+↓ (if safe)
+LLM Generation (simulated)
+↓
+Hallucination Verification (NLI-based)
+↓
+Final Answer + Safety Signal
+
+yaml
+Copy code
+
+---
+
+## Methodology
+
+### 1. Poisoning Detection (Pre-generation)
+A **multi-layer defense** is used:
+
+- **Prompt Injection Detector**
+  - Flags instruction-override language
+- **Intent Mismatch Detector**
+  - Uses sentence embeddings to detect semantic divergence between query 
+and context
+- **Token Anomaly Detector**
+  - Detects abnormal imperative or system-level language
+
+If any detector triggers, generation is blocked.
+
+---
+
+### 2. Retrieval-Augmented Generation (RAG Simulation)
+- Documents are embedded using Sentence-BERT
+- Query–document similarity is computed via cosine similarity
+- The most relevant document is retrieved
+- The retrieval layer is modular and can be replaced with FAISS in 
+production
+
+---
+
+### 3. Hallucination Detection (Post-generation)
+- Uses a Natural Language Inference (NLI) model
+- Checks whether the generated answer is **entailed** by the retrieved 
+context
+- Non-entailed responses are flagged as hallucinations
+
+---
+
+## Evaluation
+The system is evaluated qualitatively by comparing:
+
+- **Without poisoning detection:** hallucinations observed
+- **With poisoning detection:** hallucinations reduced by blocking 
+malicious context
+
+This demonstrates that many hallucinations originate from poisoned inputs 
+rather than model limitations.
+
+---
+
+## Project Structure
+llm_safety_system/
+├── app.py
+├── data/
+│ └── synthetic_generator.py
+├── detectors/
+│ ├── injection_detector.py
+│ ├── intent_mismatch.py
+│ ├── token_anomaly.py
+│ └── poisoning_filter.py
+├── rag/
+│ └── retriever.py
+├── verification/
+│ └── hallucination_checker.py
+├── evaluation/
+│ └── evaluate.py
+├── requirements.txt
+└── README.md
+
+yaml
+Copy code
+
+---
+
+## Technologies Used
+- Python
+- HuggingFace Transformers
+- Sentence-BERT
+- Natural Language Inference (NLI)
+- Retrieval-Augmented Generation (RAG)
+- AI Safety Techniques
+
+---
+
+## Key Takeaways
+- Many LLM hallucinations originate from **poisoned context**
+- Pre-generation safety layers are more effective than post-generation 
+filtering alone
+- AI safety is a **system design problem**, not just a modeling problem
+
+---
+
+## Future Work
+- Quantitative evaluation on larger datasets
+- Support for multi-document retrieval
+- Confidence-based abstention
+- Real-time monitoring and logging
+- Integration with production LLM APIs
+
+---
+
+## Author
+Built as an AI safety and systems-focused project for advanced software 
+engineering and machine learning internships.
