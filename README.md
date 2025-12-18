@@ -60,9 +60,6 @@ Hallucination Verification (NLI-based)
 ↓
 Final Answer + Safety Signal
 
-yaml
-Copy code
-
 ---
 
 ## Methodology
@@ -129,9 +126,6 @@ llm_safety_system/
 │ └── evaluate.py
 ├── requirements.txt
 └── README.md
-
-yaml
-Copy code
 
 ---
 
