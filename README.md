@@ -83,14 +83,17 @@ reference facts.
    cd llm-safety-system
 
 2. Create and activate a virtual environment:
+   ```bash
    python3 -m venv venv
    source venv/bin/activate
 
 3. Install dependencies:
+   ```bash
    pip install -r requirements.txt
 
-4.Run the demo pipeline:
-  python app.py
+4. Run the demo pipeline:
+   ```bash
+   python app.py
 
 ---
 
