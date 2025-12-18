@@ -26,6 +26,7 @@ filtering alone is insufficient.
 Build a modular safety layer that detects poisoning *before* inference and 
 measures hallucination reduction *after* inference.
 
+
 ---
 
 ## Threat Model
