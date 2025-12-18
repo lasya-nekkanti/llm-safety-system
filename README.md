@@ -108,26 +108,6 @@ rather than model limitations.
 
 ---
 
-## Project Structure
-llm_safety_system/
-├── app.py
-├── data/
-│ └── synthetic_generator.py
-├── detectors/
-│ ├── injection_detector.py
-│ ├── intent_mismatch.py
-│ ├── token_anomaly.py
-│ └── poisoning_filter.py
-├── rag/
-│ └── retriever.py
-├── verification/
-│ └── hallucination_checker.py
-├── evaluation/
-│ └── evaluate.py
-├── requirements.txt
-└── README.md
-
----
 
 ## Technologies Used
 - Python
