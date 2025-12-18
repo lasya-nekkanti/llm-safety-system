@@ -156,6 +156,3 @@ specialized rather than redundant.
 - Expand poisoning detection beyond rule-based patterns
 ---
 
-## Author
-Built as an AI safety and systems-focused project for advanced software 
-engineering and machine learning internships.
